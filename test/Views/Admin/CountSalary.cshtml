@@ -1,0 +1,89 @@
+﻿
+@{
+    Layout = null;
+}
+@using test.Models
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @RenderPage("~/Public/styles.cshtml")
+    @RenderPage("~/Public/scripts.cshtml")
+    <style type="text/css">
+        .pagination {
+            margin: 0px;
+        }
+
+        .list-header {
+            padding-bottom: 0px;
+        }
+    </style>
+    <title>计算工资</title>
+</head>
+
+<body>
+
+    <div style="">
+        <div class="ibox zero-margin">
+            <div class="ibox-content list-header">
+                <div class="row">
+                    <div class="ibox-content">
+                        <form class="form-group col-md-10 query form-group-margin" method="get">
+                            <div class="col-md-12">
+                                <label class="layui-form-label col-md-2 text-center " style="font-size:14px;" for="year">工资项计算年份:</label>
+                                <div class="form-group col-md-6">
+                                    <input id="year" name="year" placeholder="工资项计算年份" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="layui-form-label col-md-2 text-center" style="font-size:14px;" for="month">工资项计算月份:</label>
+                                <div class="form-group col-md-6">
+                                    <input id="month" name="month" placeholder="工资项计算月份" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group col-md-1 col-md-offset-2">
+                                    <button class="btn btn-md btn-info btn-md-padding" id="Btn"type="button">
+                                        开始计算
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var ButtonDom = $("#Btn"),
+            YearDom = $("#year"),
+            MonthDom = $("#month");
+        ButtonDom.on('click', function () {
+            var year = YearDom.val(),
+                month = MonthDom.val();
+            if ($.trim(year) == "") {
+                alert("请输入年份");
+                return false;
+            } else if($.trim(month) == "") {
+                alert("请输入月份");
+                return false;
+            }
+            $.ajax({
+                url: "CountSalaryAjax",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        year: year,
+                        month: month
+                    },
+                    success: function (r) {
+                        alert("success");
+                    }
+            })
+
+        })
+    </script>
+</body>
+</html>

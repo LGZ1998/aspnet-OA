@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @RenderPage("~/Public/styles.cshtml")
+    @RenderPage("~/Public/scripts.cshtml")
+    <title>test</title>
+</head>
+<body>
+    <div>
+        <div style="background-color:blue; height:500px;width:500px;z-index:-1;">
+
+            <div id="div" style="background-color:yellow; display:none;height:300px;width:300px;z-index:1;">
+
+            </div>
+        </div>
+
+        <input type="checkbox" name="checkbox" value="1" />1
+        <input type="checkbox" name="checkbox" value="2" />2
+        <input type="checkbox" name="checkbox" value="3" />3
+        <input type="checkbox" name="checkbox" value="4" />4
+
+        <input type="checkbox" name="all" value="all" id="all"/>全选
+        <button type="button" id="button">按钮</button>
+    </div>
+    <script>
+        $(function () {
+            $("#button").on("click", function () {
+                $("#div").show();
+            })
+            $("#all").change(function () {
+                if ($("#all").is(':checked')) {
+                    $("#div").show();
+                    $("input[name='checkbox']").prop("checked", true);
+                } else {
+                    $("input[name='checkbox']").prop("checked", false);
+                }
+            })
+            $("input[name='checkbox']").change(function () {
+                if ($(this).is(":checked")) {
+                    alert($(this).val() + "选中");
+                    $("#div").show();   
+                } else {
+                    alert($(this).val() + "取消");
+                }
+            })
+        })
+    </script>
+</body>
+</html>

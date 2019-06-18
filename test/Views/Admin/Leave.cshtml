@@ -1,0 +1,530 @@
+﻿
+@{
+    Layout = null;
+}
+@using test.Models
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @RenderPage("~/Public/styles.cshtml")
+    @RenderPage("~/Public/scripts.cshtml")
+    <style type="text/css">
+        .pagination {
+            margin: 0px;
+        }
+
+        .list-header {
+            padding-bottom: 0px;
+        }
+    </style>
+    <title>人事管理</title>
+</head>
+
+<body>
+
+    <div style="">
+        <div class="ibox zero-margin">
+            <div class="ibox-content list-header">
+                <div class="row">
+                    <div class="ibox-content">
+                        <form class="form-group col-sm-10 query form-group-margin" method="get">
+                            <div class="form-group col-md-3">
+                                <input id="querys" name="name" placeholder="姓名、ID" class="form-control">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input id="start_date" type="text" name="start_date" placeholder="开始时间" class="form-control ">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input id="end_date" type="text" name="end_date" placeholder="结束时间" class="form-control ">
+                            </div>
+                            <div class="col-md-1 text-right" style="margin-top: 0;">
+                                <button id="queryBtn" class="btn btn-md btn-info btn-md-padding"
+                                        type="button">
+                                    搜索
+                                </button>
+                            </div>
+                            <div class="col-md-1 text-right" style="margin-top: 0;">
+                                <button href="~/Leave/#check-form" class="btn btn-md btn-info btn-md-padding" data-toggle="modal" id="add" type="button">
+                                    添加
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div style="background: #f2f2f2;height: 15px;"></div>
+            <div class="ibox-content table-list">
+                <table id="TableList"></table>
+            </div>
+        </div>
+    </div>
+    <div id="check-form" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog" style="width:1000px;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <form role="form" method="post" action="#" id="staff_form">
+                                <div class="form-group col-md-12 text-center">
+                                    <span style="font-size:15px;font-weight:bolder;">员工信息</span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">员工工号：</label>
+                                    <div class="col-sm-9">
+                                        <input id="staff_id" type="text" name="staff_id" placeholder="" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">员工姓名：</label>
+                                    <div class="col-sm-9">
+                                        <input id="name" type="text" name="name" placeholder="" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">部门：</label>
+                                    <div class="col-sm-9">
+                                        <input id="department" type="text" name="department" placeholder="" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">岗位：</label>
+                                    <div class="col-sm-9">
+                                        <input id="position" type="text" name="position" placeholder="" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">职务：</label>
+                                    <div class="col-sm-9">
+                                        <input id="duty" type="text" name="duty" placeholder="" class="form-control" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">快速导入：</label>
+                                    <div class="col-md-9 text-left" style="margin-top: 0;">
+                                        <button href="~/Leave/#select-form" class="btn btn-md btn-info btn-md-padding" data-toggle="modal" id="add" type="button">
+                                            导入员工
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-12 text-center">
+                                    <span style="font-size:15px;font-weight:bolder;">加班信息</span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">开始时间：</label>
+                                    <div class="col-sm-9">
+                                        <input id="write_start" type="text" name="write_start" placeholder="yyyy-MM-dd HH:mm:ss" class="form-control ">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">结束时间：</label>
+                                    <div class="col-sm-9">
+                                        <input id="write_end" type="text" name="write_end" placeholder="yyyy-MM-dd HH:mm:ss" class="form-control ">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">休假天数：</label>
+                                    <div class="col-sm-9">
+                                        <input id="days" type="text" name="days" class="form-control " readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">休假类型：</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" id="type" name="type">
+                                            <option value="1">事假</option>
+                                            <option value="2">病假</option>
+                                            <option value="3">特假</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="col-sm-3 control-label">休假说明：</label>
+                                    <div class="col-sm-9">
+                                        <textarea name="explains" id="explains" placeholder="请输入内容" class="layui-textarea"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-sm-1 col-sm-offset-5">
+                                        <button class="btn btn-md btn-success btn-md-padding" id="submit-btn" type="button">
+                                            提交
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button class="btn btn-md btn-danger btn-md-padding" id="reset" type="reset">
+                                            清除
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="select-form" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <form>
+                                <div class="form-group col-md-4">
+                                    <input id="select-query" name="" placeholder="姓名、ID" class="form-control">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <select class="form-control" id="select-department">
+                                        <option value="0">所有部门</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 text-right" style="margin-top: 0;">
+                                    <button id="select-btn" class="btn btn-md btn-info btn-md-padding" type="button">
+                                        搜索
+                                    </button>
+                                </div>
+                                <div class="col-md-1 col-md-offset-1 text-right" style="margin-top: 0;">
+                                    <button id="verify-btn" class="btn btn-md btn-success btn-md-padding" type="button">
+                                        确定
+                                    </button>
+                                </div>
+                                <div class="ibox-content table-list" style="height:200px;overflow:auto;" id="select-div">
+                                    <table class="layui-table" id="select-table">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    选择
+                                                </th>
+                                                <th>
+                                                    工号
+                                                </th>
+                                                <th>
+                                                    姓名
+                                                </th>
+                                                <th>
+                                                    部门
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        var Table = {
+            table: $("#TableList"),
+            query: {},
+            init: function () {
+
+                Table.setQuery();
+                Table.table.bootstrapTable({
+
+                    url: '/Admin/GetLeave',//请求后台的URL
+                    striped: true,
+                    pageList: [10, 20, 50, 100],
+                    pagination: true,
+                    pageSize: 10,
+                    columns: [
+                        {
+                            field: "Staff_id",
+                            title: "ID",
+                            align: "left",
+
+                        },
+                        {
+                            field: "Name",
+                            title: "姓名",
+                            align: "left",
+
+                        },
+                        {
+                            field: "Start_time",
+                            title: "开始日期",
+                            align: "left",
+
+
+                        },
+                        {
+                            field: "End_time",
+                            title: "结束日期",
+                            align: "left",
+
+                        },
+                        {
+                            field: "Days",
+                            title: "天数",
+                            align: "left",
+
+                        },
+                        {
+                            field: "Type",
+                            title: "类型",
+                            align: "left",
+                            formatter: function (value) {
+                                var arr = ['普通加班','节假日加班'];
+                                return arr[value - 1];
+                            }
+
+                        },
+                        {
+                            field: "Explains",
+                            title: "具体说明",
+                            align: "left",
+
+                        },
+                        {
+                            title: "操作",
+                            align: "left",
+                            formatter: function (value, data) {
+                                var html = '';
+                                html += html += '<button style="margin-left:5px;" class="btn btn-sm btn-info operating leave-update"   data-id="' + data.Id + '" type="button"> 修改</button>' +
+                                    '<button style="margin-left:5px;" class="btn btn-sm btn-danger operating leave-delete"   data-id="' + data.Id + '" type="button"> 删除</button> ';
+                                return html;
+                            }
+                        }
+                    ],
+                    //将搜索框中的数据传入后台
+                    queryParams: function (params) {
+                        return $.extend(params, Table.query);
+                    }
+                });
+            },
+            //设置Table中的搜索参数
+            setQuery: function () {
+                var querys = $("#querys").val(),
+                    start_date = $("#start_date").val(),
+                    end_date = $("#end_date").val();
+
+                Table.query = {
+                    query: querys,
+                    start_date: start_date,
+                    end_date: end_date
+                };
+            },
+            //搜索
+            search: function () {
+                Table.setQuery();
+
+                Table.table.bootstrapTable('selectPage', 1);
+                Table.table.bootstrapTable('refresh');
+            }
+        };
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $(document).on("click", ".leave-update", function () {
+                alert("修改");
+            })
+            $(document).on("click", ".leave-delete", function () {
+                var $this = $(this);
+                layer.confirm('确定删除？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    $.ajax({
+                        url: "/Admin/DeleteLeave",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            levae_id: $this.attr("data-id"),
+                        },
+                        success: function (r) {
+                            if (r == false) {
+                                layer.msg('删除失败', { time: 1 * 1000, icon: 1 }, function () {
+                                    window.location = '/Admin/Leave';
+                                });
+                            }
+                            else {
+                                layer.msg('删除成功', { time: 1 * 1000, icon: 1 }, function () {
+                                    window.location = '/Admin/Leave';
+                                });
+                            }
+                        }
+                    });
+                });
+            })
+        })
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            Table.init();
+            var QueryBtnDom = $("#queryBtn"),
+                SelectTable = $("#select-table tbody"),
+                SelectQuery = $("#select-query"),
+                SelectDiv = $("#select-div"),
+                VerifyBtn = $("#verify-btn"),
+                SelectDepartment = $("#select-department"),
+                StaffIdDom = $("#staff_id"),
+                DepartmentDom = $("#department"),
+                NameDom = $("#name"),
+                PositionDom = $("#position"),
+                DutyDom = $("#duty"),
+                CheckForm = $("#check-form"),
+                StaffForm = $("#staff_form"),
+                SelectForm = $("#select-form"),
+                SelectBtn = $("#select-btn"),
+                SubmitBtn = $("#submit-btn"),
+                StaffIdDom = $("#staff_id"),
+                WriteStart = $("#write_start"),
+                WriteEnd = $("#write_end");
+            QueryBtnDom.on("click", function () {
+                Table.search();
+
+                return false;
+            });
+            VerifyBtn.on("click", function () {
+                var id = $("input[name='decide']:checked").val();
+                var name = $("tr[data-id='" + id + "']").data("name");
+                var department = $("tr[data-id='" + id + "']").data("department");
+                var position = $("tr[data-id='" + id + "']").data("position");
+                var duty = $("tr[data-id='" + id + "']").data("duty");
+                StaffIdDom.val(id);
+                DepartmentDom.val(department);
+                NameDom.val(name);
+                PositionDom.val(position);
+                DutyDom.val(duty);
+                SelectForm.modal("hide");//关闭模态框
+                //alert(name + " " + department);
+            })
+            SelectBtn.on("click", function () {
+
+                $.ajax({
+                    url: "SelectStaffAjax",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        query: SelectQuery.val(),
+                        department: SelectDepartment.val()
+                    },
+                    success: function (r) {
+                        SelectTable.empty();
+                        for (var data in r) {
+                            /*SelectDiv.append("Some prepended text.");*/
+                            var html = $("<tr data-id='" + r[data].id + "'data-name='" + r[data].name + "' data-department='" + r[data].department + "' data-position='" + r[data].position + "' data-duty='" + r[data].duty + "' ></tr>");
+                            var radio = $("<td><input type='radio' name='decide' value='" + r[data].id + "' /></td>");
+                            var id = $("<td name='id'>" + r[data].id + "</td>");
+                            var name = $("<td name='name'>" + r[data].name + "</td>");
+                            var department = $("<td name='department'>" + r[data].department + "</td>");
+                            html.append(radio).append(id).append(name).append(department);
+                            SelectTable.append(html);
+                            /*var html = $("<tr><td><input type='radio' id='my /></td><td>" + r[data].name + "</td></tr>");*/
+                            //SelectTable.append(html);
+                        }
+
+                    }
+                })
+            })
+            SelectBtn.click();
+            SubmitBtn.on("click", function () {
+                var staff_id = StaffIdDom.val(),
+                    starttime = WriteStart.val(),
+                    endtime = WriteEnd.val();
+
+                if (staff_id == "") {
+                    alert("请导入员工");
+                    return false;
+                }
+                if (starttime == "") {
+                    alert("请选择加班开始时间");
+                    return false;
+                }
+                if (endtime == "") {
+                    alert("请选择加班结束时间");
+                    return false;
+                }
+                $.ajax({
+                    url: "WriteLeave",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        staff_id: staff_id,
+                        write_start: starttime,
+                        write_end: endtime,
+                        days: $("#days").val(),
+                        type: $("#type").val(),
+                        explains: $("#explains").val()
+                    },
+                    success: function (r) {
+
+                        window.location = '/Admin/Leave';
+                    }
+
+                })
+            })
+        })
+    </script>
+    <script>
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start_date', //指定元素
+                type: 'datetime'
+            });
+            laydate.render({
+                elem: '#end_date',
+                type: 'datetime'
+            });
+            laydate.render({
+                elem: '#write_start',
+                type: 'datetime',
+                done: function (value) {
+                    var EndTime = $("#write_end").val(),
+                        DaysDom = $("#days");
+                    if (value != "" && EndTime != "") {
+                        $.ajax({
+                            url: "GetDaysAjax",
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                starttime: value,
+                                endtime: EndTime
+                            },
+                            success: function (r) {
+                                DaysDom.val(r['days'].toFixed(1));
+                            }
+                        })
+                    }
+                }
+            });
+            laydate.render({
+                elem: '#write_end',
+                type: 'datetime',
+                done: function (value) {
+                    var StartTime = $("#write_start").val(),
+                        DaysDom = $("#days");
+                    if (value != "" && StartTime != "") {
+                        $.ajax({
+                            url: "GetDaysAjax",
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                starttime: StartTime,
+                                endtime: value
+                            },
+                            success: function (r) {
+                                DaysDom.val(r['days'].toFixed(1));
+                            }
+                        })
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,339 @@
+﻿@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    @RenderPage("~/Public/styles.cshtml")
+    @RenderPage("~/Public/scripts.cshtml")
+
+    <script type="text/javascript">
+        layui.use('element', function () {
+            var element = layui.element;
+
+            //一些事件监听
+            element.on('tab(demo)', function (data) {
+                console.log(data);
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="layui-col-md-offset3 layui-col-md6 layui-card" style="margin-top:100px;">
+        <div id='login' class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <div>
+                <ul class="layui-tab-title">
+                    <li class="layui-this">职员登陆</li>
+                    <li>管理员登陆</li>
+                </ul>
+            </div>
+            <div class="layui-tab-content layui-col-md12">
+                <div class="layui-tab-item layui-show" style="padding-left:20px">
+                    <div class="layui-col-md12">
+                        <form id="user-form" class="layui-form" method="post" action="UserLogin">
+                            <div class="layui-form-item">
+                                <label class="layui-col-md1">账号：</label>
+                                <div class="layui-col-md5">
+                                    <input id="user-name" name="name" class="layui-input" type="text" lay-verify="required" placeholder="请输入账号">
+                                </div>
+                                <label class="layui-form-label" id="user-name-err"></label>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-col-md1">密码：</label>
+                                <div class="layui-col-md5">
+                                    <input id="user-pwd" name="password" class="layui-input" type="password" lay-verify="required" placeholder="请输入密码">
+                                </div>
+                                <label class="layui-form-label" id="user-pwd-err"></label>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-col-md1">
+                                    验证码：
+                                </label>
+                                <div class="layui-col-md5">
+                                    <input id="in_code" name="password" class="layui-input" type="password" lay-verify="required" placeholder="请输入验证码">
+                                </div>
+                                <div class="layui-col-md3 layui-col-lg-offset1">
+                                    <a href="#" id="changeImg">
+                                        <canvas class="show-captcha" id="canvas" width="150" height="40"></canvas>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label"></label>
+                                    <button class="layui-col-md1 layui-col-md-offset1 layui-btn" type="button" id="user-submit">登陆</button>
+                                </div>
+                                <div class="">
+                                    <button class="layui-col-md1 layui-col-md-offset1 layui-btn layui-btn-danger" type="reset">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-tab-item" style="padding-left:20px">
+                    <div class="layui-col-md12">
+                        <form id="admin-form" class="layui-form" method="post" action="AdminLogin">
+                            <div class="layui-form-item">
+                                <label class="layui-col-md1">账号：</label>
+                                <div class="layui-col-md5">
+                                    <input id="admin-name" name="name" class="layui-input" type="text" lay-verify="required" placeholder="请输入账号">
+                                </div>
+                                <label class="layui-form-label" id="admin-name-err"></label>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-col-md1">密码：</label>
+                                <div class="layui-col-md5">
+                                    <input id="admin-pwd" name="password" class="layui-input" type="password" lay-verify="required" placeholder="请输入密码">
+                                </div>
+                                <label class="layui-form-label" id="admin-pwd-err"></label>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-col-md1">
+                                    验证码：
+                                </label>
+                                <div class="layui-col-md5">
+                                    <input id="admin-incode" name="password" class="layui-input" type="password" lay-verify="required" placeholder="请输入验证码">
+                                </div>
+                                <div class="layui-col-md3 layui-col-lg-offset1">
+                                    <a href="#" id="admin-changeImg">
+                                        <canvas class="show-captcha" id="admin-canvas" width="150" height="40"></canvas>
+                                    </a>
+                                </div>
+
+                            </div>
+                            <div class="layui-form-item">
+                                <div>
+                                    <label class="layui-form-label"></label>
+                                    <button class="layui-col-md1 layui-col-md-offset1 layui-btn" type="button" id="admin-submit">登陆</button>
+                                </div>
+                                <div class="">
+                                    <button class="layui-col-md1 layui-col-md-offset1 layui-btn layui-btn-danger" type="reset">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            var AdminSubmitDom = $("#admin-submit"),
+                AdminNameDom = $("#admin-name"),
+                AdminPwdDom = $("#admin-pwd"),
+                AdminPwdErrDom = $("#admin-pwd-err"),
+                AdminNameErrDom = $("#admin-name-err"),
+                AdminFormDom = $("#admin-form"),
+                UserSubmitDom = $("#user-submit"),
+                UserNameDom = $("#user-name"),
+                UserPwdDom = $("#user-pwd"),
+                UserPwdErrDom = $("#user-pwd-err"),
+                UserNameErrDom = $("#user-name-err");
+            AdminNameDom.blur(function () {
+                var name = AdminNameDom.val().trim();
+                if (name == null || name == "") {
+                    AdminNameErrDom.text("请输入账号");
+                }
+            })
+            AdminPwdDom.blur(function () {
+                var pwd = AdminPwdDom.val().trim();
+                if (pwd == null || pwd == "") {
+                    AdminPwdErrDom.text("请输入密码");
+                }
+            })
+            UserNameDom.blur(function () {
+                var name = UserNameDom.val().trim();
+                if (name == null || name == "") {
+                    UserNameErrDom.text("请输入账号");
+                }
+            })
+            UserPwdDom.blur(function () {
+                var pwd = UserPwdDom.val().trim();
+                if (pwd == null || pwd == "") {
+                    UserPwdErrDom.text("请输入密码");
+                }
+            })
+            AdminSubmitDom.click(function () {
+                var name = AdminNameDom.val().trim(),
+                    pwd = AdminPwdDom.val().trim(),
+                    admincode = sessionStorage.getItem('admincode').toLowerCase(),//session的code   转小写
+                    admin_incode = $("#admin-incode").val().trim().toLowerCase();//输入框的code    去空格 转小写
+                if (name == null || name == "") {
+                    AdminNameErrDom.text("请输入账号");
+                    return false;
+                }
+                if (pwd == null || pwd == "") {
+                    AdminPwdErrDom.text("请输入密码");
+                    return false;
+                }
+                if (admin_incode == "" || admin_incode == null) {
+                    alert("请输入验证码");
+                    return false;
+                }
+                if (admin_incode != admincode) {
+                    alert("验证码错误");
+                    $("#admin-changeImg").click();//验证码错误 刷新验证码
+                    return false;
+                }
+                $.ajax({
+                    url: "AdminLoginAjax",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        name: name,
+                        pwd: pwd
+                    },
+                    success: function (r) {
+                        if (r != null && JSON.stringify(r) != "{}") {
+                            window.location = '/Admin/index';
+                        } else {
+                            alert("用户名或密码错误!");
+                        }
+                    }
+
+                })
+
+            })
+            UserSubmitDom.click(function () {
+                var name = UserNameDom.val().trim(),
+                    pwd = UserPwdDom.val().trim(),
+                    code = sessionStorage.getItem('code').toLowerCase(),//session的code   转小写
+                    in_code = $("#in_code").val().trim().toLowerCase();//输入框的code    去空格 转小写
+                if (name == null || name == "") {
+                    UserNameErrDom.text("请输入账号");
+                    return false;
+                }
+                if (pwd == null || pwd == "") {
+                    UserPwdErrDom.text("请输入密码");
+                    return false;
+                }
+                if (in_code == "" || in_code == null) {
+                    alert("请输入验证码");
+                    return false;
+                }
+                if (code != in_code) {
+                    alert("验证码错误");
+                    $("#changeImg").click();//验证码错误 刷新验证码
+                    return false;
+                }
+                $.ajax({
+                    url: "UserLoginAjax",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        name: name,
+                        pwd: pwd
+                    },
+                    success: function (r) {
+                        if (r != null && JSON.stringify(r) != "{}") {
+                            window.location = '/User/index';
+                        } else {
+                            alert("用户名或密码错误!");
+                        }
+                    }
+                })
+            })
+        });
+
+
+    </script>
+    <script type="text/javascript">
+
+        $(function () {
+
+            /**生成一个随机数**/
+            function randomNum(min, max) {
+                return Math.floor(Math.random() * (max - min) + min);
+            }
+            /**生成一个随机色**/
+            function randomColor(min, max) {
+                var r = randomNum(min, max);
+                var g = randomNum(min, max);
+                var b = randomNum(min, max);
+                return "rgb(" + r + "," + g + "," + b + ")";
+            }
+            var canvas = $("#canvas")[0];
+            var admincanvas = $("#admin-canvas")[0];
+            var code = drawPic(canvas);
+            var admincode = drawPic(admincanvas);
+            sessionStorage.setItem("code", code);
+            sessionStorage.setItem("admincode", admincode);
+            $("#changeImg").on("click", function (e) {
+                e.preventDefault();
+                code = drawPic(canvas);
+                sessionStorage.setItem("code", code);
+            })
+            $("#admin-changeImg").on("click", function (e) {
+                e.preventDefault();
+                admincode = drawPic(admincanvas);
+                sessionStorage.setItem("admincode", admincode);
+            })
+            /**绘制验证码图片**/
+            function drawPic(canvas) {
+               
+                var width = canvas.width;
+                var height = canvas.height;
+                //获取该canvas的2D绘图环境
+                var ctx = canvas.getContext('2d');
+                ctx.textBaseline = 'bottom';
+                /**绘制背景色**/
+                ctx.fillStyle = randomColor(180, 240);
+                //颜色若太深可能导致看不清
+                ctx.fillRect(0, 0, width, height);
+                /**绘制文字**/
+                var str = 'ABCEFGHJKLMNPQRSTWXY123456789';
+
+                var code = "";
+                //生成四个验证码
+                for (var i = 1; i <= 4; i++) {
+                    var txt = str[randomNum(0, str.length)];
+                    code = code + txt;
+
+                    ctx.fillStyle = randomColor(50, 160);
+                    //随机生成字体颜色
+                    ctx.font = randomNum(15, 40) + 'px SimHei';
+                    //随机生成字体大小
+                    var x = 10 + i * 25;
+                    var y = randomNum(25, 35);
+                    var deg = randomNum(-45, 45);
+                    //修改坐标原点和旋转角度
+                    ctx.translate(x, y);
+                    ctx.rotate(deg * Math.PI / 180);
+                    ctx.fillText(txt, 0, 0);
+                    //恢复坐标原点和旋转角度
+                    ctx.rotate(-deg * Math.PI / 180);
+                    ctx.translate(-x, -y);
+                }
+                //写入session
+
+                /**绘制干扰线**/
+                for (var i = 0; i < 3; i++) {
+                    ctx.strokeStyle = randomColor(40, 180);
+                    ctx.beginPath();
+                    ctx.moveTo(randomNum(0, width / 2), randomNum(0, height / 2));
+                    ctx.lineTo(randomNum(0, width / 2), randomNum(0, height));
+                    ctx.stroke();
+                }
+                /**绘制干扰点**/
+                for (var i = 0; i < 50; i++) {
+                    ctx.fillStyle = randomColor(255);
+                    ctx.beginPath();
+                    ctx.arc(randomNum(0, width), randomNum(0, height), 1, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+                return code;
+            }
+        });
+    </script>
+</body>
+</html>

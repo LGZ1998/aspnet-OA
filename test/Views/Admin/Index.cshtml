@@ -1,0 +1,196 @@
+﻿
+@{
+    Layout = null;
+
+}
+@using test.Models
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title>HUI 后台主题UI框架 - 主页</title>
+
+
+    @RenderPage("~/Public/styles.cshtml")
+    @RenderPage("~/Public/scripts.cshtml")
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close">
+                <i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <span><img alt="image" class="img-circle" src="~/Public/HUI/img/profile_small.jpg" /></span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs"><strong class="font-bold">@ViewBag.user["name"]</strong></span>
+                                    <span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li>
+                                    <a class="J_menuItem" href="form_avatar.html">修改头像</a>
+                                </li>
+                                <li>
+                                    <a class="J_menuItem" href="profile.html">个人资料</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="/LoginOut/index">安全退出</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                            HUI
+                        </div>
+                    </li>
+                    <!--之后有时间将改成从数据库导入生成菜单-->
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-credit-card"></i>
+                            <span class="nav-label">薪资管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="CountSalary" data-index="0">工资计算</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="Salary">工资查询</a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-address-book"></i>
+                            <span class="nav-label">人事档案</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="personnel" data-index="0">人事管理</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="index_sv4.html">证照管理</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="index_sv5.html">人事合同</a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-user"></i>
+                            <span class="nav-label">考勤管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="index_sv6.html" data-index="0">考勤记录</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="Leave">休假管理</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="Overtime">加班管理</a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    <li>
+                        <a class="J_menuItem" id="send_email" data-index="0">发送邮件</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row content-tabs">
+                <button class="navbar-minimalize roll-nav roll-left J_tabLeft" id="ListWindow">
+                    <i class="fa fa-backward"></i>
+                </button>
+                <nav class="page-tabs J_menuTabs">
+                    <div class="page-tabs-content">
+                        <a href="javascript:;" class="active J_menuTab" data-id="first">首页</a>
+                    </div>
+                </nav>
+                <button class="roll-nav roll-right J_tabRight">
+                    <i class="fa fa-forward"></i>
+                </button>
+                <div class="btn-group roll-nav roll-right">
+                    <button class="dropdown J_tabClose" data-toggle="dropdown">
+                        关闭操作<span class="caret"></span>
+
+                    </button>
+                    <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                        <li class="J_tabShowActive">
+                            <a>定位当前选项卡</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="J_tabCloseAll">
+                            <a>关闭全部选项卡</a>
+                        </li>
+                        <li class="J_tabCloseOther">
+                            <a>关闭其他选项卡</a>
+                        </li>
+                    </ul>
+                </div>
+                <a href="/LoginOut/index" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+            </div>
+            <div class="row J_mainContent" id="content-main">
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="first" frameborder="0" data-id="first" seamless></iframe>
+            </div>
+            <div class="footer">
+                <div class="pull-right">
+                    &copy; 2014-2015 <a href="http://www.zi-han.net/" target="_blank">zihan's blog</a>
+                </div>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            var ListWindowDom = $("#ListWindow"),
+                ListIDom = $("#ListWindow i"),
+                BodyDom = $("body"),
+                SendEmail = $("#send_email");
+            ListWindowDom.click(function () {
+                if (BodyDom.hasClass("mini-navbar")) {
+                    ListIDom.removeClass("fa-backward").addClass("fa-forward");
+                } else {
+                    ListIDom.removeClass("fa-forward").addClass("fa-backward");
+                }
+            })
+            SendEmail.on("click", function () {
+                $.ajax({
+                        url: "SendEmailAjax",
+                        type: "post",        
+                        dataType: "json",       
+                        data: {
+                            email:"1005740939@qq.com"
+                        },
+                        success: function (r) {
+                            alert("success");
+                        }       
+                })      
+            })
+        })
+    </script>
+</body>
+
+</html>

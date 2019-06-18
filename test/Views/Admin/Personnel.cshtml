@@ -1,0 +1,769 @@
+﻿
+@{
+    Layout = null;
+}
+@using test.Models
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @RenderPage("~/Public/styles.cshtml")
+    @RenderPage("~/Public/scripts.cshtml")
+    <style type="text/css">
+        .pagination{
+            margin:0px;
+        }
+        .list-header{
+            padding-bottom:0px;
+        }
+    </style>
+    <title>人事管理</title>
+</head>
+
+<body>
+
+    <div style="">
+        <div class="ibox zero-margin">
+            <div class="ibox-content list-header">
+                <div class="row">
+                    <div class="ibox-content">
+                        <form class="form-group col-sm-10 query form-group-margin" method="get">
+                            <div class="form-group col-md-4">
+                                <input id="querys" name="name" placeholder="姓名、ID" class="form-control">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <select class="form-control" id="SelectDepartment" name="">
+                                    <option value="0">所有部门</option>
+                                    <option value="1">人力资源部</option>
+                                    <option value="2">推广部</option>
+                                    <option value="3">客服部</option>
+                                    <option value="4">行政部</option>
+                                    <option value="5">财务部</option>
+                                    <option value="6">销售部</option>
+                                    <option value="7">技术部</option>
+
+                                </select>
+                            </div>
+                            <div class="col-md-1 text-right" style="margin-top: 0;">
+                                <button id="queryBtn" class="btn btn-md btn-info btn-md-padding" type="button">
+                                    搜索
+                                </button>
+                            </div>
+                            <div class="col-md-1 text-right" style="margin-top: 0;">
+                                <button href="~/Properties/#check-form" class="btn btn-md btn-info btn-md-padding" data-toggle="modal" id="add" type="button">
+                                    添加
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div style="background: #f2f2f2;height: 15px;"></div>
+            <div class="ibox-content table-list">
+                <table id="TableList"></table>
+            </div>
+        </div>
+        <!-- 用户 -->
+        <div id="check-form" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog" style="width:1000px;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12 ">
+                                <form role="form" method="post" action="WriteStaff" id="staff_form">
+                                    <div class="form-group col-md-12 text-center">
+                                        <span style="font-size:15px;font-weight:bolder;">基本信息</span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">姓名：</label>
+                                        <div class="col-sm-9">
+                                            <input id="name" type="text" name="name" placeholder="姓名" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">性别：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="sex" id="sex">
+                                                <option value="1">男</option>
+                                                <option value="2">女</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label ">出生日期：</label>
+                                        <div class="col-sm-9">
+                                            <input id="birthday" type="text" name="birthday" placeholder="年-月-日" class="form-control ">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">身份证号：</label>
+                                        <div class="col-sm-9">
+                                            <input id="identity_card" type="text" name="identity_card" placeholder="身份证号" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">籍贯：</label>
+                                        <div class="col-sm-9">
+                                            <input id="place" type="text" name="place" placeholder="籍贯" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">民族：</label>
+                                        <div class="col-sm-9">
+                                            <input id="nation" type="text" name="nation" placeholder="民族" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">婚姻状况：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="marital_status" id="marital_status">
+                                                <option value="1">未婚</option>
+                                                <option value="2">已婚</option>
+                                                <option value="3">离异</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">政治面貌：</label>
+                                        <div class="col-sm-9">
+                                            <input id="politics_status" type="text" name="politics_status" placeholder="政治面貌" class="form-control">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-md-12 text-center">
+                                        <span style="font-size:15px;font-weight:bolder;">单位信息</span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">部门：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="department" id="department">
+                                                <option value="0">-</option>
+                                                <option value="1">人力资源部</option>
+                                                <option value="2">推广部</option>
+                                                <option value="3">客服部</option>
+                                                <option value="4">行政部</option>
+                                                <option value="5">财务部</option>
+                                                <option value="6">销售部</option>
+                                                <option value="7">技术部</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">岗位：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="position" id="position">
+                                                <option value="0">-</option>
+                                                <option value="1">经理</option>
+                                                <option value="2">主任</option>
+                                                <option value="3">科长</option>
+                                                <option value="4">总监</option>
+                                                <option value="5">外聘</option>
+                                                <option value="6">职员</option>
+                                                <option value="7">其它</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">职务：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="duty" id="duty">
+                                                <option value="0">-</option>
+                                                <option value="1">总经理</option>
+                                                <option value="2">业务经理</option>
+                                                <option value="3">技术总监</option>
+                                                <option value="4">部门经理</option>
+                                                <option value="5">值班经理</option>
+                                                <option value="6">业务员</option>
+                                                <option value="7">客服经理</option>
+                                                <option value="8">文员</option>
+                                                <option value="9">部门总监</option>
+                                                <option value="10">技术员</option>
+                                                <option value="11">销售人员</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">工种：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="type" id="type">
+                                                <option value="0">-</option>
+                                                <option value="1">合同工</option>
+                                                <option value="2">临时工</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-md-12 text-center">
+                                        <span style="font-size:15px;font-weight:bolder;">工资信息</span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">基本工资：</label>
+                                        <div class="col-sm-9">
+                                            <input id="fixed" type="text" name="fixed" placeholder="基本工资" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">全勤奖金：</label>
+                                        <div class="col-sm-9">
+                                            <input id="alltsutomu" type="text" name="alltsutomu" placeholder="全勤奖金" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6 hide" id="target_div">
+                                        <label class="col-sm-3 control-label">月销售指标：</label>
+                                        <div class="col-sm-9">
+                                            <input id="target" type="text" name="target" placeholder="销售员月销售指标" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6 hide" id="reach_bonus_div">
+                                        <label class="col-sm-3 control-label">达成奖金：</label>
+                                        <div class="col-sm-9">
+                                            <input id="reach_bonus" type="text" name="reach_bonus" placeholder="销售员指标达成奖金" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6 hide" id="commission_div">
+                                        <label class="col-sm-3 control-label">销售额抽成：</label>
+                                        <div class="col-sm-9">
+                                            <input id="commission" type="text" name="commission" placeholder="千分比" class="form-control">
+                                        </div>
+                                    </div>
+
+                                </form>
+                                <div class="form-group col-md-6 col-md-offset-3">
+                                    <button class="col-md-3 col-md-offset-2 btn btn-success" id="submit" type="button">提交</button>
+                                    <button class="col-md-3 col-md-offset-2 btn btn-danger" id="reset" type="reset">重置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--详情界面-->
+        
+        <div id="particulars-form" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog" style="width:1000px;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12 ">
+                                <form role="form" method="post" action="#" id="change_form">
+                                    <div class="form-group col-md-12 text-center">
+                                        <span style="font-size:15px;font-weight:bolder;">基本信息</span>
+                                    </div>
+                                    <div class="form-group col-md-6 hide" >
+                                        <label class="col-sm-3 control-label">Id</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-id" type="text" name="particulars-id" placeholder="ID" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">姓名：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-name" type="text" name="particulars-name" placeholder="姓名" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">性别：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="particulars-sex" id="particulars-sex">
+                                                <option value="1">男</option>
+                                                <option value="2">女</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label ">出生日期：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-birthday" type="text" name="particulars-birthday" placeholder="年-月-日" class="form-control ">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">身份证号：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-identity_card" type="text" name="particulars-identity_card" placeholder="身份证号" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">籍贯：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-place" type="text" name="particulars-place" placeholder="籍贯" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">民族：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-nation" type="text" name="particulars-nation" placeholder="民族" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">婚姻状况：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="particulars-marital_status" id="particulars-marital_status">
+                                                <option value="1">未婚</option>
+                                                <option value="2">已婚</option>
+                                                <option value="3">离异</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">政治面貌：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-politics_status" type="text" name="particulars-politics_status" placeholder="政治面貌" class="form-control">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-md-12 text-center">
+                                        <span style="font-size:15px;font-weight:bolder;">单位信息</span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">部门：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="particulars-department" id="particulars-department">
+                                                <option value="0">-</option>
+                                                <option value="1">人力资源部</option>
+                                                <option value="2">推广部</option>
+                                                <option value="3">客服部</option>
+                                                <option value="4">行政部</option>
+                                                <option value="5">财务部</option>
+                                                <option value="6">销售部</option>
+                                                <option value="7">技术部</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">岗位：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="particulars-position" id="particulars-position">
+                                                <option value="0">-</option>
+                                                <option value="1">经理</option>
+                                                <option value="2">主任</option>
+                                                <option value="3">科长</option>
+                                                <option value="4">总监</option>
+                                                <option value="5">外聘</option>
+                                                <option value="6">职员</option>
+                                                <option value="7">其它</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">职务：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="particulars-duty" id="particulars-duty">
+                                                <option value="0">-</option>
+                                                <option value="1">总经理</option>
+                                                <option value="2">业务经理</option>
+                                                <option value="3">技术总监</option>
+                                                <option value="4">部门经理</option>
+                                                <option value="5">值班经理</option>
+                                                <option value="6">业务员</option>
+                                                <option value="7">客服经理</option>
+                                                <option value="8">文员</option>
+                                                <option value="9">部门总监</option>
+                                                <option value="10">技术员</option>
+                                                <option value="11">销售人员</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">工种：</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="particulars-type" id="particulars-type">
+                                                <option value="0">-</option>
+                                                <option value="1">合同工</option>
+                                                <option value="2">临时工</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-md-12 text-center">
+                                        <span style="font-size:15px;font-weight:bolder;">工资信息</span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">基本工资：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-fixed" type="text" name="particulars-fixed" placeholder="基本工资" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-sm-3 control-label">全勤奖金：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-alltsutomu" type="text" name="particulars-alltsutomu" placeholder="全勤奖金" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6 hide" id="particulars-target_div">
+                                        <label class="col-sm-3 control-label">月销售指标：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-target" type="text" name="particulars-target" placeholder="销售员月销售指标" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6 hide" id="particulars-reach_bonus_div">
+                                        <label class="col-sm-3 control-label">达成奖金：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-reach_bonus" type="text" name="particulars-reach_bonus" placeholder="销售员指标达成奖金" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6 hide" id="particulars-commission_div">
+                                        <label class="col-sm-3 control-label">销售额抽成：</label>
+                                        <div class="col-sm-9">
+                                            <input id="particulars-commission" type="text" name="particulars-commission" placeholder="千分比" class="form-control">
+                                        </div>
+                                    </div>
+
+
+                                </form>
+                                <div class="form-group col-md-6 col-md-offset-3">
+                                    <button class="col-md-3 col-md-offset-2 btn btn-success" id="particulars-submit" type="button">保存修改</button>
+                                    <button class="col-md-3 col-md-offset-2 btn btn-danger" id="close" type="reset" >关闭窗口</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#birthday' //指定元素
+            });
+            laydate.render({
+                elem: '#particulars-birthday' //指定元素
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        var Table = {//实例化一个Table对象
+            table: $("#TableList"),//绑定要显示的表格
+            query: {},
+            init: function () {
+
+                Table.setQuery();
+                Table.table.bootstrapTable({
+
+                    url: '/Admin/GetPersonnelAjax',//请求后台的URL
+                    striped: true,
+                    pageList: [10,20, 50, 100],//可供选择的每页的行数
+                    pagination: true,//是否显示分页
+                    pageSize: 10,//每页显示的数据
+                    columns: [
+                        {
+                            field: "Id",
+                            title: "ID",
+                            align: "left",
+
+                        },
+                        {
+                            field: "Name",
+                            title: "姓名",
+                            align: "left",
+
+                        },
+                        {
+                            field: "Department",
+                            title: "部门",
+                            align: "left",
+                            formatter: function (value) {
+                                var arr = ['人力资源部','推广部','客服部','行政部','财务部','销售部','技术部'];
+                                return arr[value - 1];
+                            }
+
+                        },
+                        {
+                            field: "Position",
+                            title: "岗位",
+                            align: "left",
+                            formatter: function (value) {
+                                var arr = ['经理', '主任', '科长', '总监', '外聘', '职员', '其它'];
+                                return arr[value - 1];
+                            }
+
+                        },
+                        {
+                            field: "Duty",
+                            title: "职务",
+                            align: "left",
+                            formatter: function (value) {
+                                var arr = ['总经理', '业务经理', '技术总监', '部门经理', '值班经理', '业务员',
+                                    '客服经理', '文员', '部门总监','技术员', '销售人员'];
+                                return arr[value - 1];
+                            }
+                        },
+                        {
+                            field: "Type",
+                            title: "工种",
+                            align: "left",
+                            formatter: function (value) {
+                                var arr = ['合同工', '临时工'];
+                                return arr[value - 1];
+                            }
+                        },
+                        {
+                            title: "操作",
+                            align: "left",
+                            formatter: function (value, data) {
+                                var html = '';
+                                html += html += '<a href="#particulars-form" class="btn btn-sm btn-info operating particulars" data-toggle="modal"  data-id="' + data.Id + '" type="button"> 详情</a> ';
+                                //html += "<button id='particulars'>详情</button>"
+                                return html;
+                            }
+                        }
+                    ],
+                    //将搜索框中的数据传入后台
+                    queryParams: function (params) {
+                        return $.extend(params, Table.query);
+                    }
+                });
+            },
+            //设置Table中的搜索参数
+            setQuery: function () {
+                var SelectDepartment = $("#SelectDepartment").val(),
+                    Querys = $("#querys").val();
+
+                Table.query = {
+                    query: Querys,
+                    department: SelectDepartment
+                };
+            },
+            //搜索
+            search: function () {
+                Table.setQuery();
+
+                Table.table.bootstrapTable('selectPage', 1);
+                Table.table.bootstrapTable('refresh');
+            }
+        };
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            Table.init();//初始化数据表
+            var QueryBtnDom = $("#queryBtn");
+            QueryBtnDom.on("click", function () {
+                Table.search();
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var submitBtn = $("#submit"),
+                resetBtn = $("#reset"),
+                staffFrom = $("#staff_form"),
+                duty = $("#duty"),
+                name = $("#name"),
+                birthday = $("#birthday"),
+                identity_card = $("#identity_card"),
+                place = $("#place"),
+                nation = $("#nation"),
+                politics_status = $("#politics_status"),
+                fixed = $("#fixed"),
+                alltsutomu = $("#alltsutomu"),
+                target = $("#target"),
+                reach_bonus = $("#reach_bonus"),
+                commission = $("#commission"),
+                number = /^\d{1,}$/,
+
+                targetDom = $("#target_div"),
+                reach_bonusDom = $("#reach_bonus_div"),
+                commissionDom = $("#commission_div");
+
+
+            resetBtn.on("click", function () {
+                staffFrom[0].reset();
+            })
+            
+            submitBtn.on("click", function () {
+                if (name.val() == "") {
+                    alert("请输入姓名");
+                    return false;
+                }
+                if (birthday.val() == "") {
+                    alert("请选择出生日期");
+                    return false;
+                }
+                if (identity_card.val() == "") {
+                    alert("请输入身份证号码");
+                    return false;
+                }
+                if (place.val() == "") {
+                    alert("请输入籍贯");
+                    return false;
+                }
+                if (nation.val() == "") {
+                    alert("请输入民族");
+                    return false;
+                }
+                if (politics_status.val() == "") {
+                    alert("请输入政治面貌");
+                    return false;
+                }
+                if (fixed.val() == "") {
+                    alert("请输入基本工资");
+                    return false;
+                } else if (!number.test(fixed.val())) {
+                    alert("基本工资为正整型，请检查格式：" + fixed.val());
+                    return false;
+                }
+                if (alltsutomu.val() == "") {
+                    alert("请输入全勤奖金");
+                    return false;
+                } else if (!number.test(alltsutomu.val())) {
+                    alert("全勤奖金为正整型，请检查格式：" + alltsutomu.val());
+                    return false;
+                }
+                if (!targetDom.hasClass("hide")) {
+                    if (target.val() == "") {
+                        alert("请输入销售指标");
+                        return false;
+                    } else if (!number.test(target.val())) {
+                        alert("销售指标为正整型，请检查格式" + target.val());
+                        return false;
+                    }
+                }
+                if (!reach_bonusDom.hasClass("hide")) {
+                    if (reach_bonus.val() == "") {
+                        alert("请输入达成奖金");
+                        return false;
+                    } else if (!number.test(reach_bonus.val())) {
+                        alert("达成奖金为正整型，请检查格式" + reach_bonus.val());
+                        return false;
+                    }
+                }
+                if (!commissionDom.hasClass("hide")) {
+                    if (commission.val() == "") {
+                        alert("请输入销售额抽成");
+                        return false;
+                    } else if (!number.test(commission.val())) {
+                        alert("销售额抽成为正整型，请检查格式" + commission.val());
+                        return false;
+                    }
+                }
+                
+                staffFrom.submit();
+            })
+            duty.on("change", function () {
+                if (duty.val() == "11") {
+                    targetDom.removeClass("hide");
+                    reach_bonusDom.removeClass("hide");
+                    commissionDom.removeClass("hide");
+                } else {
+                    targetDom.addClass("hide");
+                    reach_bonusDom.addClass("hide");
+                    commissionDom.addClass("hide");
+                }
+            })
+        })
+    </script>
+    
+    <script type="text/javascript">
+        $(function () {
+            var P_Name = $("#particulars-name"),
+                P_Sex = $("#particulars-sex"),
+                P_Birthday = $("#particulars-birthday"),
+                P_Place = $("#particulars-place"),
+                P_Nation = $("#particulars-nation"),
+                P_Marital_status = $("#particulars-marital_status"),
+                P_Politics_status = $("#particulars-politics_status"),
+                P_Identity_card = $("#particulars-identity_card"),
+                P_Department = $("#particulars-department"),
+                P_Position = $("#particulars-position"),
+                P_Duty = $("#particulars-duty"),
+                P_Type = $("#particulars-type"),
+                P_Fixed = $("#particulars-fixed"),
+                P_Sale = $("#particulars-sale"),
+                P_Target = $("#particulars-target"),
+                P_Reach_bonus = $("#particulars-reach_bonus"),
+                P_Commission = $("#particulars-commission"),
+                P_Grade = $("#particulars-grade"),
+                P_Alltsutomu = $("#particulars-alltsutomu"),
+                P_Id = $("#particulars-id"),
+                close = $("#close"),
+
+                P_targetDom = $("#particulars-target_div"),
+                P_reach_bonusDom = $("#particulars-reach_bonus_div"),
+                P_commissionDom = $("#particulars-commission_div"),
+
+                particularsDiv = $("#particulars-form"),
+                particularsSubmit = $("#particulars-submit");
+            
+
+            close.on("click", function () {
+                particularsDiv.modal("hide");
+            })
+            particularsSubmit.on("click", function () {
+
+
+            })
+            P_Duty.on("change", function () {
+                if (P_Duty.val() == "11") {
+                    P_targetDom.removeClass("hide");
+                    P_reach_bonusDom.removeClass("hide");
+                    P_commissionDom.removeClass("hide");
+                } else {
+                    P_targetDom.addClass("hide");
+                    P_reach_bonusDom.addClass("hide");
+                    P_commissionDom.addClass("hide");
+                }
+            })
+            /*var Particulars = $(".particulars");
+            Particulars.on("click", function () {
+                alert("on click");
+            })*/
+            //动态添加元素添加 点击事件
+            $(document).on("click", ".particulars", function () {
+                var $this = $(this);
+                $.ajax({
+                    url: "GetStaffDetail",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        staff_id: $this.attr("data-id"),
+                    },
+                    success: function (r) {
+                        P_Id.val(r["id"]);
+                        P_Name.val(r["name"]);
+                        P_Sex.val(r["sex"]);
+                        P_Birthday.val(r["birthday"]);
+                        P_Place.val(r["place"]);
+                        P_Nation.val(r["nation"]);
+                        P_Marital_status.val(r["marital_status"]);
+                        P_Politics_status.val(r["politics_status"]);
+                        P_Identity_card.val(r["identity_card"]);
+                        P_Department.val(r["department"]);
+                        P_Position.val(r["position"]);
+                        P_Duty.val(r["duty"]);
+                        P_Type.val(r["type"]);
+                        P_Fixed.val(r["fixed"]);
+                        P_Sale.val(r["sale"]);
+                        P_Target.val(r["target"]);
+                        P_Reach_bonus.val(r["reach_bonus"]);
+                        P_Commission.val(r["commission"]);
+                        P_Grade.val(r["grade"]);
+                        P_Alltsutomu.val(r["alltsutomu"]);
+
+                        if (P_Duty.val() == "11") {
+                            P_targetDom.removeClass("hide");
+                            P_reach_bonusDom.removeClass("hide");
+                            P_commissionDom.removeClass("hide");
+                        } else {
+                            P_targetDom.addClass("hide");
+                            P_reach_bonusDom.addClass("hide");
+                            P_commissionDom.addClass("hide");
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+﻿
+@{
+    Layout = null;
+}
+@using test.Models
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @RenderPage("~/Public/styles.cshtml")
+    @RenderPage("~/Public/scripts.cshtml")
+    <style type="text/css">
+        .pagination {
+            margin: 0px;
+        }
+
+        .list-header {
+            padding-bottom: 0px;
+        }
+    </style>
+    <title>人事管理</title>
+</head>
+
+<body>
+
+    <div style="">
+        <div class="ibox zero-margin">
+            <div class="ibox-content list-header">
+                <div class="row">
+                    <div class="ibox-content">
+                        <form class="form-group col-sm-10 query form-group-margin" method="get">
+                            <div class="form-group col-md-3">
+                                <input id="querys" name="name" placeholder="姓名、ID" class="form-control">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input id="year" name="year" placeholder="年" class="form-control">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input id="month" name="month" placeholder="月" class="form-control">
+                            </div>
+                            <div class="col-md-1 text-right" style="margin-top: 0;">
+                                <button id="queryBtn" class="btn btn-md btn-info btn-md-padding"
+                                        type="submit">
+                                    搜索
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div style="background: #f2f2f2;height: 15px;"></div>
+            <div class="ibox-content table-list">
+                <table id="TableList"></table>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+            var Table = {
+                table: $("#TableList"),
+                query: { },
+                init: function () {
+
+                    Table.setQuery();
+                    Table.table.bootstrapTable({
+
+                        url: '/Admin/GetSalaryAjax',//请求后台的URL
+                        striped: true,
+                        pageList: [20, 50, 100],
+                        pagination: true,
+                        pageSize: 20,
+                        columns: [
+                            {
+                                field: "Staff_name",
+                                title: "姓名",
+                                align: "left",
+
+                            },
+                            {
+                                field: "Department",
+                                title: "部门",
+                                align: "left",
+
+                            },
+                            {
+                                field: "Fixed",
+                                title: "固定工资",
+                                align: "left",
+                                formatter: function (value) {
+                                    return (value/100).toFixed(2);
+                                }
+
+                            },
+                            {
+                                field: "TechnicalAllowance",
+                                title: "技术津贴",
+                                align: "left",
+                                formatter: function (value) {
+                                    return (value / 100).toFixed(2);
+                                }
+                            },
+                            {
+                                field: "Overtime",
+                                title: "加班",
+                                align: "left",
+                                formatter: function (value) {
+                                    return (value / 100).toFixed(2);
+                                }
+                            },
+                            {
+                                field: "Leave",
+                                title: "请假",
+                                align: "left",
+                                formatter: function (value) {
+                                    var html = "";
+                                    if (value > 0)
+                                        html ="-";
+                                    html += (value / 100).toFixed(2);
+                                    return html;
+                                }
+                            },
+                            {
+                                field:"Late",
+                                title: "迟到",
+                                align: "left",
+                                formatter: function (value) {
+                                    var html = "";
+                                    if (value > 0)
+                                        html ="-";
+                                    html += (value / 100).toFixed(2);
+                                     return html;
+                                }
+                            },
+                            {
+                                field:"Extra",
+                                title: "销售抽成",
+                                align: "left",
+                                formatter: function (value) {
+                                  return (value/100).toFixed(2);
+                                }
+                            },
+                            {
+                                field:"ReachBonus",
+                                title: "销售指标达成奖金",
+                                align: "left",
+                                formatter: function (value) {
+                                    return (value/100).toFixed(2);
+                                }
+                            },
+                            {
+                                field:"AllTsutomu",
+                                title: "全勤奖金",
+                                align: "left",
+                                formatter: function (value) {
+                                    return (value/100).toFixed(2);
+                                }
+                            },
+                            {
+                                field:"Total",
+                                title: "总工资",
+                                align: "left",
+                                formatter: function (value) {
+                                    return (value/100).toFixed(2);
+                                }
+                            }
+                        ],
+                        //将搜索框中的数据传入后台
+                        queryParams: function (params) {
+                            return $.extend(params, Table.query);
+                        }
+                    });
+                },
+                //设置Table中的搜索参数
+                setQuery: function () {
+                    var querys = $("#querys").val(),
+                        year = $("#year").val(),
+                        month = $("#month").val();
+
+                    Table.query = {
+                        query : querys,
+                        year: year,
+                        month: month
+                    };
+                },
+                //搜索
+                search: function () {
+                    Table.setQuery();
+
+                    Table.table.bootstrapTable('selectPage', 1);
+                    Table.table.bootstrapTable('refresh');
+                }
+            };
+    </script>
+    <script type="text/javascript">
+            $(function () {
+                Table.init();
+                var QueryBtnDom = $("#queryBtn");
+                QueryBtnDom.on("click",function () {
+                    Table.search();
+
+                    return false;
+                });
+            })
+    </script>
+</body>
+
+</html>
